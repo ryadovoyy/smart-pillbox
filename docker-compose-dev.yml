@@ -1,9 +1,14 @@
 services:
   app:
     container_name: app
-    image: yiisoftware/yii2-php:8.4-fpm-nginx
-    volumes:
-      - .:/app
+    build:
+      context: .
+      dockerfile: app.develop.Dockerfile
+    develop:
+      watch:
+        - action: sync
+          path: .
+          target: /app
     ports:
       - "8000:80"
     env_file:
