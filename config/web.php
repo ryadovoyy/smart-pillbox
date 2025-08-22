@@ -15,13 +15,30 @@ $config = [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => $_ENV['APP_COOKIE_VALIDATION_KEY'],
+            'parsers' => [
+                'application/json' => \yii\web\JsonParser::class,
+            ],
+        ],
+        'response' => [
+            'format' => \yii\web\Response::FORMAT_JSON,
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
             'identityClass' => 'app\models\User',
-            'enableAutoLogin' => true,
+            'enableAutoLogin' => false,
+        ],
+        'jwt' => [
+            'class' => \bizley\jwt\Jwt::class,
+            'signer' => \bizley\jwt\Jwt::HS256,
+            'signingKey' => $_ENV['APP_JWT_SECRET_KEY'],
+            'validationConstraints' => static function (\bizley\jwt\Jwt $jwt) {
+                $config = $jwt->getConfiguration();
+                return [
+                    new \Lcobucci\JWT\Validation\Constraint\SignedWith($config->signer(), $config->signingKey()),
+                ];
+            }
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -42,14 +59,13 @@ $config = [
             ],
         ],
         'db' => $db,
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
+            'enableStrictParsing' => true,
             'showScriptName' => false,
             'rules' => [
             ],
         ],
-        */
     ],
     'params' => $params,
 ];
