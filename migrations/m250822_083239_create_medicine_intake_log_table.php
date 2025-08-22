@@ -75,6 +75,7 @@ class m250822_083239_create_medicine_intake_log_table extends Migration
             'reminder_id',
             '{{%reminder}}',
             'id',
+            'SET NULL'
         );
     }
 

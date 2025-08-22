@@ -21,6 +21,15 @@ class m250821_140441_create_user_table extends Migration
             'created_at' => $this->integer(),
             'updated_at' => $this->integer(),
         ]);
+
+        $this->insert('{{%user}}', [
+            'name' => 'John Smith',
+            'email' => 'user@example.com',
+            'password_hash' => Yii::$app->getSecurity()->generatePasswordHash('password'),
+            'iana_timezone' => 'Asia/Tomsk',
+            'created_at' => time(),
+            'updated_at' => time(),
+        ]);
     }
 
     /**
