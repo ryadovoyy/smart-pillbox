@@ -64,6 +64,20 @@ $config = [
             'enableStrictParsing' => true,
             'showScriptName' => false,
             'rules' => [
+                [
+                    'class' => 'yii\web\GroupUrlRule',
+                    'prefix' => 'api',
+                    'routePrefix' => '',
+                    'rules' => [
+                        [
+                            'class' => 'yii\rest\UrlRule',
+                            'prefix' => 'api',
+                            'controller' => ['medicine'],
+                            'only' => ['index', 'create']
+                        ],
+                        'login' => 'user/login',
+                    ],
+                ],
             ],
         ],
     ],

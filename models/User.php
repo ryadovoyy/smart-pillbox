@@ -3,9 +3,9 @@
 namespace app\models;
 
 use Yii;
-use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\web\ForbiddenHttpException;
 use yii\web\IdentityInterface;
 
 /**
@@ -36,6 +36,14 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * {@inheritdoc}
      */
+    public function fields()
+    {
+        return ['id', 'name'];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function behaviors()
     {
         return [
@@ -52,7 +60,6 @@ class User extends ActiveRecord implements IdentityInterface
             [['created_at', 'updated_at'], 'default', 'value' => null],
             [['iana_timezone'], 'default', 'value' => 'UTC'],
             [['name', 'email', 'password_hash'], 'required'],
-            [['created_at', 'updated_at'], 'default', 'value' => null],
             [['created_at', 'updated_at'], 'integer'],
             [['name', 'email', 'password_hash'], 'string', 'max' => 255],
             [['iana_timezone'], 'string', 'max' => 50],
@@ -81,7 +88,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        return static::findOne($id);
+        return static::findOne(['id' => $id]);
     }
 
     /**
@@ -89,7 +96,14 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+        $claims = Yii::$app->jwt->parse($token)->claims();
+        $uid = $claims->get('uid');
+
+        if (!is_numeric($uid)) {
+            throw new ForbiddenHttpException('Invalid token provided');
+        }
+
+        return static::findOne(['id' => $uid]);
     }
 
     /**
@@ -116,7 +130,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function getAuthKey()
     {
-        throw new NotSupportedException('"getAuthKey" is not implemented.');
+        return null;
     }
 
     /**
@@ -124,7 +138,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function validateAuthKey($authKey)
     {
-        throw new NotSupportedException('"validateAuthKey" is not implemented.');
+        return false;
     }
 
     /**

@@ -33,6 +33,14 @@ class Medicine extends ActiveRecord
     /**
      * {@inheritdoc}
      */
+    public function fields()
+    {
+        return ['id', 'name', 'dose', 'description'];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function behaviors()
     {
         return [
@@ -48,9 +56,8 @@ class Medicine extends ActiveRecord
         return [
             [['dose', 'description', 'created_at', 'updated_at'], 'default', 'value' => null],
             [['user_id', 'name'], 'required'],
-            [['user_id', 'created_at', 'updated_at'], 'default', 'value' => null],
             [['user_id', 'created_at', 'updated_at'], 'integer'],
-            [['description'], 'string'],
+            [['description'], 'string', 'max' => 1000],
             [['name', 'dose'], 'string', 'max' => 255],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
