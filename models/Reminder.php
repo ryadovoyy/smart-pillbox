@@ -2,7 +2,8 @@
 
 namespace app\models;
 
-use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%reminder}}".
@@ -21,7 +22,7 @@ use Yii;
  * @property MedicineIntakeLog[] $medicineIntakeLogs
  * @property User $user
  */
-class Reminder extends \yii\db\ActiveRecord
+class Reminder extends ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -29,6 +30,16 @@ class Reminder extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return '{{%reminder}}';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::class,
+        ];
     }
 
     /**

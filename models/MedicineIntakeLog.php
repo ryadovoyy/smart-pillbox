@@ -2,7 +2,7 @@
 
 namespace app\models;
 
-use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%medicine_intake_log}}".
@@ -19,7 +19,7 @@ use Yii;
  * @property Reminder $reminder
  * @property User $user
  */
-class MedicineIntakeLog extends \yii\db\ActiveRecord
+class MedicineIntakeLog extends ActiveRecord
 {
     /**
      * {@inheritdoc}
